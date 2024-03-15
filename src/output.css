@@ -793,10 +793,6 @@ video {
   line-height: 1;
 }
 
-.text-\[100px\] {
-  font-size: 100px;
-}
-
 .text-\[20px\] {
   font-size: 20px;
 }
@@ -805,13 +801,13 @@ video {
   font-size: 30px;
 }
 
+.text-\[80px\] {
+  font-size: 80px;
+}
+
 .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
-}
-
-.text-\[80px\] {
-  font-size: 80px;
 }
 
 .font-medium {
@@ -932,16 +928,6 @@ video {
   .max-\[480px\]\:px-1 {
     padding-left: 0.25rem;
     padding-right: 0.25rem;
-  }
-
-  .max-\[480px\]\:text-lg {
-    font-size: 1.125rem;
-    line-height: 1.75rem;
-  }
-
-  .max-\[480px\]\:text-sm {
-    font-size: 0.875rem;
-    line-height: 1.25rem;
   }
 
   .max-\[480px\]\:text-base {
