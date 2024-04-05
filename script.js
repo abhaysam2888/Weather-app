@@ -69,6 +69,8 @@ function callingData(url) {
             noResult.classList.remove('hidden')
             cityName.textContent = 'No Result'
         } else {
+            let cityName = document.querySelector('#cityName')
+            cityName.textContent = res.location.name
             loopingData(res.forecast.forecastday)
             fillingTempData(res)
             fillingCards(res)
@@ -96,10 +98,13 @@ function callingData(url) {
 
 // calling the function on window load
 window.addEventListener('load', () => {
-    let url = `https://api.weatherapi.com/v1/forecast.json?key=${api_key}&q=gumia&days=1&aqi=yes&alerts=yes`
-    callingData(url)
-    let cityName = document.querySelector('#cityName')
-    cityName.textContent = 'Gumia'
+    // calling the current location with window navigator
+        window.navigator.geolocation.getCurrentPosition((address) => {
+            let longitude = address.coords.longitude
+            let latitude = address.coords.latitude
+            let url = `https://api.weatherapi.com/v1/forecast.json?key=${api_key}&q=${latitude},${longitude}&days=1&aqi=yes&alerts=yes`
+            callingData(url) 
+        })
 })
 
 function loopingData(data) {
@@ -111,28 +116,9 @@ function loopingData(data) {
    
     // looping the array and make clone
     arr.forEach((item) => {
-        // make local date to match with data and show with relative time with device and api
-        let date = new Date()
-        let localTime;
-        let globalTime = item.time
-
-        // checking the first condition that current month is less than 10 or not so we add 0 in less than 10 to match with api time
-        if (date.getMonth() + 1 < 10) {
-            // in second condition we check hour is less than 10 os we add 0 in every hour less than 10 to match with api hours
-            if (date.getHours() < 10) {
-                localTime = `${date.getFullYear()}-0${date.getMonth() + 1}-${date.getDate()} 0${date.getHours()}:00`
-            }else{
-                localTime = `${date.getFullYear()}-0${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:00`
-            }
-        }else {
-            localTime = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:00`
-        }
-
-        if (localTime <= globalTime) {
             let clone = templateForecast.content.cloneNode(true)
             fillingData(item, clone)
             parent.appendChild(clone)
-        }
        
     })
 }

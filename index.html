@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="./build.css">
+    <!-- Link Swiper's CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+
+        .swiper-pagination .swiper-pagination-bullet {
+            background-color: #ffffff; /* Set your desired bullet color */
+        }
+
+        .swiper-pagination .swiper-pagination-bullet-active {
+          background-color: #0059ff; /* Set your desired active bullet color */
+        }
+
+        .swiper-pagination {
+            position:relative;
+            margin:20px 0px 10px 0px;
+        }
+
+      </style>
+</head>
+<body class="bg-white dark:bg-slate-950">
+    <!-- header start -->
+    <header>
+        <!-- nav start -->
+        <nav class="mt-10 w-full flex items-center justify-center">
+            <!-- ol parent -->
+            <div class="dark:text-white w-[70%] max-[320px]:px-2 max-[600px]:w-full max-[600px]:px-5 h-10 flex flex-col">
+                <ol class="flex justify-between h-10 items-center">
+                    <!-- city name -->
+                    <li id="cityName" class="font-medium text-3xl">City name</li>
+                    <li class="flex space-x-3 max-[320px]:space-x-1 justify-center items-center">
+                        <!-- search feild -->
+                        <input type="search" name="search" id="search_feild" title="search" placeholder="search here" class="border-none isolate rounded-3xl max-[450px]:w-[150px] max-[410px]:w-[100px] bg-white/20 shadow-lg ring-1 ring-black/5 px-2 py-2 pl-3">
+                        <!-- search btn -->
+                        <button type="submit" id="searchBtn" class="border-none isolate rounded-3xl bg-emerald-400/20 shadow-lg ring-1 ring-red/5 px-3 py-1">Search</button>
+                    </li>
+                </ol>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <!-- dark mode button -->
+        <button type="submit" id="mode_btn">
+            <img src="./images/light mode.png" id="light_img" class="w-10 h-10 p-2 bg-black rounded-full max-sm:right-5 max-[520px]:bottom-5 fixed bottom-10 right-10" loading="lazy" alt="modes">
+            <img src="./images/night_mode.png" id="dark_img" class="w-10 h-10 p-2 bg-black rounded-full max-sm:right-5 max-[520px]:bottom-5 fixed bottom-10 right-10 hidden" loading="lazy" alt="modes">
+        </button>
+        <!-- temperature degree -->
+        <div class="flex justify-center items-center w-full">
+            <div class="w-[70%] max-[540px]:w-full h-fit max-[540px]:flex max-[540px]:justify-center max-[540px]:items-center">
+                <div class="mt-16 isolate h-40 max-[410px]:w-60 w-96 rounded-xl bg-white/20 max-[400px]:p-2 shadow-lg ring-1 ring-black/5 dark:text-white flex justify-between items-center">
+                    <!-- temp text parent -->
+                    <div>
+                        <!-- temp text -->
+                        <div class="px-3">
+                            <span id="temp_deg" class="text-8xl max-[400px]:text-6xl">33</span><sup class="text-[80px]">.</sup>
+                        </div>
+                        <!-- weather condition text -->
+                        <div class="px-3 mb-1">
+                            <p class="text-2xl mb-1" id="temp_status">Sunny</p>
+                            <p>
+                                <span id="temp_mini">18</span>
+                                <sup class="text-[20px]">.</sup>/
+                                <span id="temp_max">33</span>
+                                <sup class="text-[20px]">.</sup>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- temp img parent -->
+                    <div class="pr-5">
+                        <img src="https://w7.pngwing.com/pngs/574/179/png-transparent-day-forecast-sun-sunny-weather-the-weather-is-nice-today-icon-thumbnail.png" alt="weather img" class="w-20 h-20 object-cover rounded-full" loading="lazy"  id="temp-img">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- weather forecast -->
+        <div class="w-full flex justify-center items-center mt-20">
+            <div class="w-[70%] max-[350px]:w-[90%] isolate h-[230px] pt-8 px-5 rounded-xl bg-white/20 shadow-lg ring-1 ring-black/5">
+                <!-- Swiper -->
+                <div class="swiper mySwiper">
+                    <div class="swiper-wrapper">
+                        <!-- clone data -->
+                        
+                    </div>
+                <div class="swiper-pagination"></div>
+                </div>
+                <p class="dark:text-white text-center text-3xl hidden" id="noResult">No Result found</p>
+                <p class="dark:text-white text-center text-3xl hidden" id="loading">Loading......</p>
+            </div>
+        </div>
+        <!-- template for each hour-->
+        <template id="hourlyForecastTemplate">
+            <div class="swiper-slide flex items-center justify-center text-center">
+                <div class="dark:text-white flex flex-col justify-center h-[144px] w-[96px] items-center">
+                    <p id="forecast-time">2024-03-12 00:00</p>
+                    <img src="//cdn.weatherapi.com/weather/64x64/night/113.png" alt="weather img" loading="lazy" class="w-10 h-10 object-cover rounded-full my-4" id="forecast-img">
+                    <p>
+                        <span id="forecast-temp">33</span><sup class="text-[30px]">.</sup>
+                    </p>
+                </div>
+            </div>    
+        </template>
+        <!-- forecast cards components -->
+        <div class="w-full flex justify-center items-center mt-10">
+            <div class="w-[70%] max-[629px]:w-full max-[629px]:px-5 max-[320px]:px-2 h-fit space-y-10 max-[296px]:space-y-0">
+                 <!-- card flex 1 -->
+                <div class="flex flex-wrap justify-between items-center space-x-3 max-[1240px]:justify-center max-[1240px]:space-y-3">
+
+                    <div class="isolate h-32 w-52 rounded-xl max-[1240px]:mt-3 max-[926px]:ml-3 bg-white/20 max-[480px]:w-32 max-[480px]:h-24 shadow-lg ring-1 ring-black/5 max-[480px]:px-1 flex justify-around items-center max-[480px]:justify-between">
+                        <div>
+                            <img src="./images/heavy-rain.png" class="max-[480px]:h-8 max-[480px]:w-8 h-16 w-16" loading="lazy" alt="rain">
+                        </div>
+                        <div class="dark:text-white text-xl max-[480px]:text-base">
+                            <p>
+                                <span id="rain">1</span>%
+                            </p>
+                            <p>Rain Rate</p>
+                        </div>
+                    </div>
+                    <div class="isolate h-32 w-52 rounded-xl bg-white/20 shadow-lg ring-1 ring-black/5 flex justify-around items-center  max-[480px]:w-32 max-[480px]:h-24 max-[480px]:justify-between max-[480px]:px-1">
+                        <div>
+                            <img src="./images/humidity.png" class="h-16 w-16 max-[480px]:h-8 max-[480px]:w-8" loading="lazy" alt="rain">
+                        </div>
+                        <div class="dark:text-white text-xl max-[480px]:text-base">
+                            <p>
+                               <span id="humidity">28</span>%
+                            </p>
+                            <p>Humidity</p>
+                        </div>
+                    </div>
+                    <div class="isolate h-32 w-52 rounded-xl bg-white/20 shadow-lg ring-1 ring-black/5 flex justify-around items-center max-[480px]:w-32 max-[480px]:h-24 max-[480px]:justify-between max-[480px]:px-1">
+                        <div>
+                            <img src="./images/air-quality.png" class="h-16 w-16 max-[480px]:h-8 max-[480px]:w-8" loading="lazy" alt="rain">
+                        </div>
+                        <div class="dark:text-white text-xl max-[480px]:text-base">
+                            <p id="air_quality">99</p>
+                            <p>air-quality</p>
+                        </div>
+                    </div>
+                    <div class="isolate h-32 w-52 rounded-xl bg-white/20 shadow-lg ring-1 ring-black/5 flex justify-around items-center max-[480px]:w-32 max-[480px]:h-24 max-[480px]:justify-between max-[480px]:px-1">
+                        <div>
+                            <img src="./images/uv-index.png" class="h-16 w-16 max-[480px]:h-8 max-[480px]:w-8" loading="lazy" alt="rain">
+                        </div>
+                        <div class="dark:text-white text-xl  max-[480px]:text-base">
+                            <p id="uv_index">7</p>
+                            <p>UV Index</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- card flex 2 -->
+                <div class="flex flex-wrap justify-between items-center space-x-3 max-[1240px]:justify-center max-[1240px]:space-y-3">
+                    <div class="isolate h-32 w-52 rounded-xl bg-white/20 shadow-lg ring-1 ring-black/5 flex justify-around items-center max-[480px]:w-32 max-[480px]:h-24 max-[480px]:justify-between max-[480px]:px-1 max-[1240px]:mt-3 max-[926px]:ml-3">
+                        <div>
+                            <img src="./images/eye.png" class="h-16 w-16 max-[480px]:h-8 max-[480px]:w-8" loading="lazy" alt="rain">
+                        </div>
+                        <div class="dark:text-white text-xl max-[480px]:text-base">
+                            <p>
+                                <span id="visibility">6</span>Km
+                            </p>
+                            <p>Visibility</p>
+                        </div>
+                    </div>
+                    <div class="isolate h-32 w-52 rounded-xl bg-white/20 shadow-lg ring-1 ring-black/5 flex justify-around items-center max-[480px]:w-32 max-[480px]:h-24 max-[480px]:justify-between max-[480px]:px-1">
+                        <div>
+                            <img src="./images/sunrise.png" class="h-16 w-16 max-[480px]:h-8 max-[480px]:w-8" loading="lazy" alt="rain">
+                        </div>
+                        <div class="dark:text-white text-xl max-[480px]:text-base">
+                            <p id="sunrise">5:57 am</p>
+                            <p>Sunrise</p>
+                        </div>
+                    </div>
+                    <div class="isolate h-32 w-52 rounded-xl bg-white/20 shadow-lg ring-1 ring-black/5 flex justify-around items-center max-[480px]:w-32 max-[480px]:h-24 max-[480px]:justify-between max-[480px]:px-1">
+                        <div>
+                            <img src="./images/sunset.png" class="h-16 w-16 max-[480px]:h-8 max-[480px]:w-8" loading="lazy" alt="rain">
+                        </div>
+                        <div class="dark:text-white text-xl max-[480px]:text-base">
+                            <p id="sunset">5:54 pm</p>
+                            <p>Sunset</p>
+                        </div>
+                    </div>
+                    <div class="isolate h-32 w-52 rounded-xl bg-white/20 shadow-lg ring-1 ring-black/5 flex justify-around items-center max-[480px]:w-32 max-[480px]:h-24 max-[480px]:justify-between max-[480px]:px-1">
+                        <div>
+                            <img src="./images/snowy.png" class="h-16 w-16 max-[480px]:h-8 max-[480px]:w-8" loading="lazy" alt="rain">
+                        </div>
+                        <div class="dark:text-white text-xl max-[480px]:text-base">
+                            <p>
+                                <span id="snow">0</span>%
+                            </p>
+                            <p>Snow Rate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- footer started -->
+    <footer>
+        <div class="isolate h-fit mt-20 bg-white/20 shadow-lg ring-1 ring-black/5">
+            <div class="flex justify-center items-center h-fit py-2 dark:text-white font-medium text-xl">
+                <p class="max-[365px]:text-center">Designed And Develop By Abhay Kumar</p>
+            </div>
+        </div>
+    </footer>    
+</body>
+<!-- swipper js -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<!-- script -->
+<script type="module" src="./script.js"></script>
+</html>
